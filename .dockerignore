@@ -1,0 +1,13 @@
+# env file
+.env
+
+# docker
+docker-compose.yml
+Dockerfile
+
+# other
+README.md
+
+# git
+.gitignore
+.git
