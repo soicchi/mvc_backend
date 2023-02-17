@@ -5,5 +5,8 @@ import (
 )
 
 func main() {
-	database.SetupDB()
+	err := database.SetupDB()
+	if err != nil {
+		panic(err)
+	}
 }
