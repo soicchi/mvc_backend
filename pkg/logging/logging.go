@@ -11,7 +11,7 @@ func SetupLogger() (*log.Logger, error) {
 	logger.SetFormatter(&log.JSONFormatter{})
 	logger.SetReportCaller(true)
 
-	if os.Getenv("ENV") == "production" {
+	if os.Getenv("APP_ENV") == "production" {
 		logger.SetLevel(log.InfoLevel)
 	} else {
 		logger.SetLevel(log.DebugLevel)
