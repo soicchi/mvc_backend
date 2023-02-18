@@ -8,14 +8,7 @@ import (
 
 func SetupLogger() (*log.Logger, error) {
 	logger := log.New()
-	logger.SetFormatter(&log.JSONFormatter{})
-	logger.SetReportCaller(true)
-
-	if os.Getenv("APP_ENV") == "production" {
-		logger.SetLevel(log.InfoLevel)
-	} else {
-		logger.SetLevel(log.DebugLevel)
-	}
+	setLoggerConfig(logger)
 
 	file, err := getLogFile()
 	if err != nil {
@@ -33,4 +26,15 @@ func getLogFile() (*os.File, error) {
 	}
 
 	return file, nil
+}
+
+func setLoggerConfig(l *log.Logger) {
+	l.SetFormatter(&log.JSONFormatter{})
+	l.SetReportCaller(true)
+
+	if os.Getenv("APP_ENV") == "production" {
+		l.SetLevel(log.InfoLevel)
+	} else {
+		l.SetLevel(log.DebugLevel)
+	}
 }
