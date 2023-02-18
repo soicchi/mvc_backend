@@ -3,7 +3,7 @@ ENV ROOT /app
 WORKDIR $ROOT
 RUN apk update && apk add --no-cache git
 COPY go.mod go.sum ./
-RUN go mod tidy
+RUN go mod download
 COPY . .
 RUN go build -v -o ${ROOT}/binary
 
@@ -12,7 +12,7 @@ ENV ROOT /app
 WORKDIR ${ROOT}
 RUN apk update && apk add --no-cache git
 COPY go.mod go.sum ./
-RUN go mod tidy
+RUN go mod download
 COPY . .
 EXPOSE 8080
 CMD ["go", "run", "main.go"]
