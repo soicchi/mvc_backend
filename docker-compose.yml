@@ -25,6 +25,7 @@ services:
       - .env
     environment:
       APP_ENV: $APP_ENV
+      TZ: "Asia/Tokyo"
     volumes:
       - .:/app
     ports:
