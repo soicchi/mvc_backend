@@ -12,7 +12,7 @@ var db *gorm.DB
 
 func SetupDB() (err error) {
 	connectInfo := fmt.Sprintf(
-		"%s:%s@tcp(mysql)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		"%s:%s@tcp(db)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),
