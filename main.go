@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/soicchi/chatapp_backend/pkg/database"
 	"github.com/soicchi/chatapp_backend/pkg/logging"
+	"github.com/soicchi/chatapp_backend/pkg/router"
 )
 
 func main() {
@@ -15,4 +16,6 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
+
+	router.Run()
 }
