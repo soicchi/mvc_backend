@@ -6,6 +6,8 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	"github.com/soicchi/chatapp_backend/pkg/models"
 )
 
 var db *gorm.DB
@@ -22,10 +24,19 @@ func SetupDB() (err error) {
 		return err
 	}
 
+	ExecMigration()
+
 	fmt.Println("Database connected!")
 	return nil
 }
 
 func GetDB() *gorm.DB {
 	return db
+}
+
+func ExecMigration() {
+	// 新たにmodelを追加したらここに記載
+	db.AutoMigrate(
+		&models.User{},
+	)
 }
