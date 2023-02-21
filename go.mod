@@ -4,12 +4,14 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.8.2
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/sirupsen/logrus v1.9.0
 	gorm.io/driver/mysql v1.4.6
 	gorm.io/gorm v1.24.5
 )
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
