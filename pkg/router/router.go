@@ -12,8 +12,10 @@ func Run() {
 }
 
 func setupRouter() {
+	// TODO: SetTrustedProxiesの設定を検討
 	api := router.Group("/api")
 
 	v1 := api.Group("/v1")
-	addUserRoutes(v1)
+	addAuthRoutes(v1)
+	// addUserRoutes(v1)
 }
