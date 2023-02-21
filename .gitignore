@@ -9,3 +9,6 @@ app.log
 
 # module dependencies
 vendor
+
+# exec file
+app
