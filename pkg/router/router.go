@@ -16,5 +16,6 @@ func setupRouter() {
 	api := router.Group("/api")
 
 	v1 := api.Group("/v1")
-	addUserRoutes(v1)
+	addAuthRoutes(v1)
+	// addUserRoutes(v1)
 }

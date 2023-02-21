@@ -1,8 +1,8 @@
 package encrypt
 
 import (
-	"fmt"
 	"crypto/sha256"
+	"fmt"
 )
 
 func Encrypt(char string) string {
