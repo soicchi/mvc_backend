@@ -4,14 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var router = gin.Default()
-
 func Run() {
-	setupRouter()
+	router := gin.Default()
+	setupRouter(router)
 	router.Run()
 }
 
-func setupRouter() {
+func setupRouter(router *gin.Engine) {
 	// TODO: SetTrustedProxiesの設定を検討
 	api := router.Group("/api")
 
