@@ -25,6 +25,15 @@ func SignUpHandler(c *gin.Context) {
 		Email:    signUpInput.Email,
 		Password: signUpInput.Password,
 	}
+	err = newUser.Validate()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   err.Error(),
+			"message": "Invalid request body",
+		})
+		return
+	}
+
 	db := database.GetDB()
 	user, err := newUser.Create(db)
 	if err != nil {
