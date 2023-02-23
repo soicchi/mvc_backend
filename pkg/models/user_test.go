@@ -96,15 +96,6 @@ func TestValidate(t *testing.T) {
 			},
 			wantErr: true,
 		},
-		{
-			name: "invalid password",
-			fields: input{
-				Name: "test",
-			Email: "test@test.com",
-				Password: "test1234",
-			},
-			wantErr: true,
-		},
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {

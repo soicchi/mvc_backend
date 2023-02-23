@@ -1,13 +1,11 @@
 package models
 
 import (
-	"regexp"
-
 	"gorm.io/gorm"
 	"github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 
-	"github.com/soicchi/chatapp_backend/pkg/encrypt"
+	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
 type User struct {
@@ -23,19 +21,34 @@ type SignUpInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// type LoginInput struct {
+// 	Email	string `json:"email" binding:"required"`
+// 	Password string `json:"password" binding:"required"`
+// }
+
 func (u *User) Create(db *gorm.DB) (User, error) {
 	user := User{
 		Name:     u.Name,
 		Email:    u.Email,
-		Password: encrypt.Encrypt(u.Password),
+		Password: utils.Encrypt(u.Password),
 	}
 	result := db.Create(&user)
 
 	return user, result.Error
 }
 
+// func FindByEmail(db *gorm.DB, password string) (User, error) {
+// 	var user User
+// 	result := db.Where("email = ?", password).First(&user)
+
+// 	return user, result.Error
+// }
+
+// func (u *User) CheckPassword(password string) bool {
+// 	return u.Password == utils.Encrypt(password)
+// }
+
 func (u *User) Validate() error {
-	passwordRegex := "^[A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*\\d[A-Za-z0-9]*$"
 	err := validation.ValidateStruct(u,
 		validation.Field(&u.Name,
 			validation.Required.Error("Name is required"),
@@ -48,7 +61,6 @@ func (u *User) Validate() error {
 		validation.Field(&u.Password,
 			validation.Required.Error("Password is required"),
 			validation.Length(8, 255).Error("less than 7 chars or more than 256 chars"),
-			validation.Match(regexp.MustCompile(passwordRegex)).Error("invalid format"),
 		),
 	)
 	return err
