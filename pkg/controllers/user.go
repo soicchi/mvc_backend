@@ -56,7 +56,7 @@ func SignUpHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"user_id": user.ID,
-		"token": token,
+		"token":   token,
 		"message": "Successfully created user",
 	})
 }

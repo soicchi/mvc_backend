@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/soicchi/chatapp_backend/pkg/database"
-	"github.com/soicchi/chatapp_backend/pkg/utils"
 	"github.com/soicchi/chatapp_backend/pkg/router"
+	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
 func main() {

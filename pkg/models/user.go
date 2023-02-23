@@ -1,9 +1,9 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+	"gorm.io/gorm"
 
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
@@ -22,7 +22,7 @@ type SignUpInput struct {
 }
 
 type LoginInput struct {
-	Email	string `json:"email" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 

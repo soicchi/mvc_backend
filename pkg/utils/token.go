@@ -18,8 +18,8 @@ func GenerateJWTToken(userId uint) (string, error) {
 	}
 
 	claims := jwt.MapClaims{
-		"user_id":   userId,
-		"exp":      time.Now().Add(time.Hour * time.Duration(tokenLifeTime)).Unix(),
+		"user_id": userId,
+		"exp":     time.Now().Add(time.Hour * time.Duration(tokenLifeTime)).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	jwsToken, err := token.SignedString([]byte(secretKey))

@@ -27,8 +27,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "not exist name",
 			fields: input{
-				Name: "",
-				Email: "test@test.com",
+				Name:     "",
+				Email:    "test@test.com",
 				Password: "Test1234",
 			},
 			wantErr: true,
@@ -36,8 +36,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "too long name",
 			fields: input{
-				Name: over256String(),
-				Email: "test@test.com",
+				Name:     over256String(),
+				Email:    "test@test.com",
 				Password: "Test1234",
 			},
 			wantErr: true,
@@ -45,8 +45,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "not exist password",
 			fields: input{
-				Name: "test",
-				Email: "",
+				Name:     "test",
+				Email:    "",
 				Password: "Test1234",
 			},
 			wantErr: true,
@@ -54,8 +54,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "not exist email",
 			fields: input{
-				Name: "test",
-				Email: "",
+				Name:     "test",
+				Email:    "",
 				Password: "Test1234",
 			},
 			wantErr: true,
@@ -63,8 +63,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "invalid email",
 			fields: input{
-				Name: "test",
-				Email: "test",
+				Name:     "test",
+				Email:    "test",
 				Password: "Test1234",
 			},
 			wantErr: true,
@@ -72,8 +72,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "not exist password",
 			fields: input{
-				Name: "test",
-				Email: "test@test.com",
+				Name:     "test",
+				Email:    "test@test.com",
 				Password: "",
 			},
 			wantErr: true,
@@ -81,8 +81,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "too short password",
 			fields: input{
-				Name: "test",
-				Email:"test@test.com",
+				Name:     "test",
+				Email:    "test@test.com",
 				Password: "Test1",
 			},
 			wantErr: true,
@@ -90,8 +90,8 @@ func TestValidate(t *testing.T) {
 		{
 			name: "too long password",
 			fields: input{
-				Name: "test",
-				Email: "test@test.com",
+				Name:     "test",
+				Email:    "test@test.com",
 				Password: over256String(),
 			},
 			wantErr: true,
@@ -113,7 +113,7 @@ func TestValidate(t *testing.T) {
 
 func over256String() string {
 	tooLongString := ""
-	for i :=0; i < 256; i++ {
+	for i := 0; i < 256; i++ {
 		tooLongString += "a"
 	}
 	return tooLongString
