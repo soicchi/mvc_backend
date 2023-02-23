@@ -61,36 +61,35 @@ func SignUpHandler(c *gin.Context) {
 	})
 }
 
-// func LoginHandler(c *gin.Context) {
-// 	var loginInput models.LoginInput
-// 	err := c.ShouldBind(&loginInput)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"error":   err.Error(),
-// 			"message": "Invalid request body",
-// 		})
-// 		return
-// 	}
+func LoginHandler(c *gin.Context) {
+	var loginInput models.LoginInput
+	err := c.ShouldBind(&loginInput)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   err.Error(),
+			"message": "Invalid request body",
+		})
+		return
+	}
 
-// 	db := database.GetDB()
-// 	user, err := models.FindByEmail(db, loginInput.Email)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"error":   err.Error(),
-// 			"message": "Failed to find user",
-// 		})
-// 		return
-// 	}
+	db := database.GetDB()
+	user, err := models.FindByEmail(db, loginInput.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   err.Error(),
+			"message": "Failed to find user",
+		})
+		return
+	}
 
-// 	if !user.CheckPassword(loginInput.Password) {
-// 		c.JSON(http.StatusUnauthorized, gin.H{
-// 			"error":   err.Error(),
-// 			"message": "Failed to log in",
-// 		})
-// 		return
-// 	}
+	if !user.VerifyPassword(loginInput.Password) {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Password is invalid",
+		})
+		return
+	}
 
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"message": "Successfully logged in",
-// 	})
-// }
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Successfully logged in",
+	})
+}
