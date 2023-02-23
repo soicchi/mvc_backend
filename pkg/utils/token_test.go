@@ -8,9 +8,8 @@ import (
 )
 
 func TestGenerateJWTToken(t *testing.T) {
-	email := "test@test.com"
-	password := "Password1234"
-	jwsToken, err := GenerateJWTToken(email, password)
+	var userId uint = 1
+	jwsToken, err := GenerateJWTToken(userId)
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}

@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateJWTToken(email string, password string) (string, error) {
+func GenerateJWTToken(userId uint) (string, error) {
 	secretKey := os.Getenv("SECRET_KEY")
 	tokenLifeTime, err := strconv.Atoi(os.Getenv("TOKEN_LIFETIME"))
 	if err != nil {
@@ -18,8 +18,7 @@ func GenerateJWTToken(email string, password string) (string, error) {
 	}
 
 	claims := jwt.MapClaims{
-		"email":    email,
-		"password": password,
+		"user_id":   userId,
 		"exp":      time.Now().Add(time.Hour * time.Duration(tokenLifeTime)).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
