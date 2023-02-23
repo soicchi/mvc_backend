@@ -11,14 +11,14 @@ FROM golang:1.20-alpine3.16 AS dev
 ENV ROOT /app \
     TZ Asia/Tokyo
 WORKDIR ${ROOT}
-RUN apk update && apk add --no-cache git
+RUN apk update && apk add --no-cache git make openssl
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 EXPOSE 8080
 CMD ["go", "run", "main.go"]
 
-FROM golang:1.20-alpine AS prod
+FROM golang:1.20-alpine3.16 AS prod
 ENV ROOT /app \
     TZ Asia/Tokyo
 WORKDIR ${ROOT}
