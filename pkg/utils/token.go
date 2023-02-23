@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -28,3 +30,20 @@ func GenerateJWTToken(email string, password string) (string, error) {
 
 	return jwsToken, nil
 }
+
+func ExtractToken(authHeader string) (string, error) {
+	splitedHeader := strings.Split(authHeader, " ")
+	if len(splitedHeader) != 2 {
+		return "", fmt.Errorf("Invalid token: %s", authHeader)
+	}
+	token := splitedHeader[1]
+	return token, nil
+}
+
+// func VerifyToken(tokenString string) (string, error) {
+// 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+// 		if _, ok := token.Method.(*signingMethod); !ok {
+// 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+// 		}
+// 	})
+// }

@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/soicchi/chatapp_backend/pkg/database"
-	"github.com/soicchi/chatapp_backend/pkg/logging"
+	"github.com/soicchi/chatapp_backend/pkg/utils"
 	"github.com/soicchi/chatapp_backend/pkg/router"
 )
 
 func main() {
-	logger, err := logging.SetupLogger()
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}

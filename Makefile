@@ -4,5 +4,8 @@ download:
 build:
 	go build -o app
 
+test:
+	go test ./...
+
 generate_secretkey:
 	openssl rand -base64 32
