@@ -82,7 +82,7 @@ func LoginHandler(context *gin.Context) {
 		return
 	}
 
-	if !user.isValidPassword(loginInput.Password) {
+	if !user.VerifyPassword(loginInput.Password) {
 		context.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Password is invalid",
 		})
