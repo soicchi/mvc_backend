@@ -27,8 +27,8 @@ func TestExtractToken(t *testing.T) {
 		"Bearer",
 		"",
 	}
+	assert := assert.New(t)
 	for _, header := range testHeaders {
-		assert := assert.New(t)
 		token, err := ExtractToken(header)
 		if err != nil {
 			assert.Equal(err, fmt.Errorf("Invalid token: %s", header))
