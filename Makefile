@@ -7,5 +7,8 @@ build:
 test:
 	go test ./...
 
+fmt:
+	go fmt ./...
+
 generate_secretkey:
 	openssl rand -base64 32
