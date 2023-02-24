@@ -2,7 +2,7 @@ download:
 	go mod tidy && go mod vendor
 
 build:
-	go build -o app
+	go build -o app ./cmd/chatapp
 
 test:
 	go test ./...

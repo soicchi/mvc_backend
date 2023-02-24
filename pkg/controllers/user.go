@@ -10,11 +10,11 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-func SignUpHandler(c *gin.Context) {
+func SignUpHandler(context *gin.Context) {
 	var signUpInput models.SignUpInput
-	err := c.ShouldBind(&signUpInput)
+	err := context.ShouldBind(&signUpInput)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
@@ -28,7 +28,7 @@ func SignUpHandler(c *gin.Context) {
 	}
 	err = newUser.Validate()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
@@ -38,7 +38,7 @@ func SignUpHandler(c *gin.Context) {
 	db := database.GetDB()
 	user, err := newUser.Create(db)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to create user",
 		})
@@ -47,25 +47,25 @@ func SignUpHandler(c *gin.Context) {
 
 	token, err := utils.GenerateJWTToken(user.ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to generate token",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	context.JSON(http.StatusOK, gin.H{
 		"user_id": user.ID,
 		"token":   token,
 		"message": "Successfully created user",
 	})
 }
 
-func LoginHandler(c *gin.Context) {
+func LoginHandler(context *gin.Context) {
 	var loginInput models.LoginInput
-	err := c.ShouldBind(&loginInput)
+	err := context.ShouldBind(&loginInput)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
@@ -75,21 +75,21 @@ func LoginHandler(c *gin.Context) {
 	db := database.GetDB()
 	user, err := models.FindByEmail(db, loginInput.Email)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to find user",
 		})
 		return
 	}
 
-	if !user.VerifyPassword(loginInput.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{
+	if !user.isValidPassword(loginInput.Password) {
+		context.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Password is invalid",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	context.JSON(http.StatusOK, gin.H{
 		"message": "Successfully logged in",
 	})
 }
