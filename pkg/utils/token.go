@@ -22,15 +22,19 @@ func GenerateJWTToken(userId uint) (string, error) {
 		"exp":     time.Now().Add(time.Hour * time.Duration(tokenLifeTime)).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	jwsToken, err := token.SignedString([]byte(secretKey))
+	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return "", err
 	}
 
-	return jwsToken, nil
+	return tokenString, nil
 }
 
 func ExtractToken(authHeader string) (string, error) {
+	if authHeader == "" {
+		return "", fmt.Errorf("Invalid token: %s", authHeader)
+	}
+
 	splitedHeader := strings.Split(authHeader, " ")
 	if len(splitedHeader) != 2 {
 		return "", fmt.Errorf("Invalid token: %s", authHeader)
@@ -39,10 +43,15 @@ func ExtractToken(authHeader string) (string, error) {
 	return token, nil
 }
 
-// func VerifyToken(tokenString string) (string, error) {
-// 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-// 		if _, ok := token.Method.(*signingMethod); !ok {
-// 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-// 		}
-// 	})
-// }
+func ParseToken(tokenString string) (*jwt.Token, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("SECRET_KEY")), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+}
