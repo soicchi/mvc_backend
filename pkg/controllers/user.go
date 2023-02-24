@@ -89,7 +89,17 @@ func LoginHandler(context *gin.Context) {
 		return
 	}
 
+	token, err := utils.GenerateJWTToken(user.ID)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error":   err.Error(),
+			"message": "Failed to generate token",
+		})
+		return
+	}
+
 	context.JSON(http.StatusOK, gin.H{
 		"message": "Successfully logged in",
+		"token":   token,
 	})
 }
