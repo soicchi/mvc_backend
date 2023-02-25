@@ -9,15 +9,15 @@ import (
 
 func TestGenerateJWTToken(t *testing.T) {
 	var userId uint = 1
-	jwsToken, err := GenerateJWTToken(userId)
+	token, err := GenerateToken(userId)
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
-	if jwsToken == "" {
+	if token == "" {
 		t.Errorf("Error: %v", err)
 	}
 
-	t.Log(fmt.Sprintf("Token: %v", jwsToken))
+	t.Log(fmt.Sprintf("Token: %v", token))
 }
 
 func TestExtractToken(t *testing.T) {
@@ -27,8 +27,8 @@ func TestExtractToken(t *testing.T) {
 		"Bearer",
 		"",
 	}
+	assert := assert.New(t)
 	for _, header := range testHeaders {
-		assert := assert.New(t)
 		token, err := ExtractToken(header)
 		if err != nil {
 			assert.Equal(err, fmt.Errorf("Invalid token: %s", header))
