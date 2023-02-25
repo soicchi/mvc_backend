@@ -45,7 +45,7 @@ func SignUpHandler(context *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateJWTToken(user.ID)
+	token, err := utils.GenerateToken(user.ID)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
@@ -89,7 +89,7 @@ func LoginHandler(context *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateJWTToken(user.ID)
+	token, err := utils.GenerateToken(user.ID)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
