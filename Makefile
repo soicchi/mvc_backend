@@ -10,5 +10,5 @@ test:
 fmt:
 	go fmt ./...
 
-generate_secretkey:
+secret_key:
 	openssl rand -base64 32

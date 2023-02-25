@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateJWTToken(userId uint) (string, error) {
+func GenerateToken(userId uint) (string, error) {
 	secretKey := os.Getenv("SECRET_KEY")
 	tokenLifeTime, err := strconv.Atoi(os.Getenv("TOKEN_LIFETIME"))
 	if err != nil {
