@@ -1,8 +1,8 @@
-name: automation test
+name: Golang Test
 run-name: ${{ github.actor }} run Github Actions
 on: push
 jobs:
-  Application-Test:
+  Test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
