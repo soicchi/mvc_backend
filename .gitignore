@@ -12,3 +12,6 @@ vendor
 
 # exec file
 app
+
+# coverage file
+coverage.out
