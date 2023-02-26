@@ -73,7 +73,7 @@ func LoginHandler(context *gin.Context) {
 	}
 
 	db := database.GetDB()
-	user, err := models.FindByEmail(db, loginInput.Email)
+	user, err := models.FindUserByEmail(db, loginInput.Email)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),

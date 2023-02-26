@@ -13,12 +13,3 @@ func TestSetupLogger(t *testing.T) {
 	}
 	defer os.Remove(testLogFilePath)
 }
-
-func TestGetLogFile(t *testing.T) {
-	testLogFilePath := "test.log"
-	_, err := getLogFile(testLogFilePath)
-	if err != nil {
-		t.Errorf("Error getting log file: %v", err)
-	}
-	defer os.Remove(testLogFilePath)
-}

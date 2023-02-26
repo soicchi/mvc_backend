@@ -4,6 +4,14 @@ import (
 	"testing"
 )
 
+func over256String() string {
+	tooLongString := ""
+	for i := 0; i < 256; i++ {
+		tooLongString += "a"
+	}
+	return tooLongString
+}
+
 func TestValidate(t *testing.T) {
 	type input struct {
 		Name     string
@@ -109,12 +117,4 @@ func TestValidate(t *testing.T) {
 			}
 		})
 	}
-}
-
-func over256String() string {
-	tooLongString := ""
-	for i := 0; i < 256; i++ {
-		tooLongString += "a"
-	}
-	return tooLongString
 }

@@ -37,7 +37,7 @@ func (u *User) Create(db *gorm.DB) (User, error) {
 	return user, result.Error
 }
 
-func FindByEmail(db *gorm.DB, email string) (User, error) {
+func FindUserByEmail(db *gorm.DB, email string) (User, error) {
 	var user User
 	result := db.Where("email = ?", email).First(&user)
 
@@ -51,6 +51,7 @@ func FindAllUsers(db *gorm.DB) ([]User, error) {
 	return users, result.Error
 }
 
+// TODO: 下記メソッド名をLoginValidateに変更
 func (u *User) Validate() error {
 	err := validation.ValidateStruct(u,
 		validation.Field(&u.Name,
