@@ -5,12 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/soicchi/chatapp_backend/pkg/models"
-	"github.com/soicchi/chatapp_backend/pkg/database"
 )
 
-func GetUsers(context *gin.Context) {
-	db := database.GetDB()
-	users, err := models.FindAllUsers(db)
+func (handler *Handler) GetUsers(context *gin.Context) {
+	users, err := models.FindAllUsers(handler.DB)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
