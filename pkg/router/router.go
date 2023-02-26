@@ -16,7 +16,7 @@ func setupRouter() *gin.Engine {
 
 	v1 := api.Group("/v1")
 	addAuthRoutes(v1)
-	// addUserRoutes(v1)
+	addUserRoutes(v1)
 
 	return router
 }

@@ -44,6 +44,13 @@ func FindByEmail(db *gorm.DB, email string) (User, error) {
 	return user, result.Error
 }
 
+func FindAllUsers(db *gorm.DB) ([]User, error) {
+	var users []User
+	result := db.Find(&users)
+
+	return users, result.Error
+}
+
 func (u *User) Validate() error {
 	err := validation.ValidateStruct(u,
 		validation.Field(&u.Name,
