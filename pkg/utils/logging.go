@@ -6,11 +6,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SetupLogger() (*log.Logger, error) {
+func SetupLogger(logFilePath string) (*log.Logger, error) {
 	logger := log.New()
-	SetLoggerConfig(logger)
+	setLoggerConfig(logger)
 
-	file, err := GetLogFile()
+	file, err := getLogFile(logFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -19,8 +19,8 @@ func SetupLogger() (*log.Logger, error) {
 	return logger, nil
 }
 
-func GetLogFile() (*os.File, error) {
-	file, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+func getLogFile(logFilePath string) (*os.File, error) {
+	file, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func GetLogFile() (*os.File, error) {
 	return file, nil
 }
 
-func SetLoggerConfig(l *log.Logger) {
+func setLoggerConfig(l *log.Logger) {
 	l.SetFormatter(&log.JSONFormatter{})
 	l.SetReportCaller(true)
 
