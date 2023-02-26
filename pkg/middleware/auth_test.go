@@ -10,12 +10,13 @@ import (
 )
 
 func TestAuthMiddleware(t *testing.T) {
-	ginContext, _ := gin.CreateTestContext(httptest.NewRecorder())
+	response := httptest.NewRecorder()
+	context, _ := gin.CreateTestContext(response)
 	request, _ := http.NewRequest("GET", "/", nil)
 	request.Header.Add("Authorization", "Bearer")
-	ginContext.Request = request
-	AuthMiddleware(ginContext)
+	context.Request = request
+	AuthMiddleware(context)
 
 	assert := assert.New(t)
-	assert.Equal(ginContext.Writer.Status(), http.StatusUnauthorized)
+	assert.Equal(context.Writer.Status(), http.StatusUnauthorized)
 }
