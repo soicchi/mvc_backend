@@ -7,7 +7,7 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/controllers"
 )
 
-func addUserRoutes(handler *controllers.Handler, routerGroup *gin.RouterGroup) {
+func addUserRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 	users := routerGroup.Group("/users")
 	users.Use(middleware.AuthMiddleware)
 	{
