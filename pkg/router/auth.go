@@ -6,10 +6,10 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/controllers"
 )
 
-func addAuthRoutes(routerGroup *gin.RouterGroup) {
+func addAuthRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 	auth := routerGroup.Group("/auth")
 	{
-		auth.POST("/signup", controllers.SignUpHandler)
-		auth.POST("/login", controllers.LoginHandler)
+		auth.POST("/signup", handler.SignUpHandler)
+		auth.POST("/login", handler.LoginHandler)
 	}
 }

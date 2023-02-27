@@ -5,12 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/soicchi/chatapp_backend/pkg/database"
 	"github.com/soicchi/chatapp_backend/pkg/models"
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-func SignUpHandler(context *gin.Context) {
+func (handler *Handler) SignUpHandler(context *gin.Context) {
 	var signUpInput models.SignUpInput
 	err := context.ShouldBind(&signUpInput)
 	if err != nil {
@@ -35,8 +34,7 @@ func SignUpHandler(context *gin.Context) {
 		return
 	}
 
-	db := database.GetDB()
-	user, err := newUser.Create(db)
+	user, err := newUser.Create(handler.DB)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
@@ -61,7 +59,7 @@ func SignUpHandler(context *gin.Context) {
 	})
 }
 
-func LoginHandler(context *gin.Context) {
+func (handler *Handler) LoginHandler(context *gin.Context) {
 	var loginInput models.LoginInput
 	err := context.ShouldBind(&loginInput)
 	if err != nil {
@@ -72,8 +70,7 @@ func LoginHandler(context *gin.Context) {
 		return
 	}
 
-	db := database.GetDB()
-	user, err := models.FindByEmail(db, loginInput.Email)
+	user, err := models.FindUserByEmail(handler.DB, loginInput.Email)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),

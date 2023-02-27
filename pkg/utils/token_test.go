@@ -2,12 +2,14 @@ package utils
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/golang-jwt/jwt/v5"
 )
 
-func TestGenerateJWTToken(t *testing.T) {
+func TestGenerateToken(t *testing.T) {
 	var userId uint = 1
 	token, err := GenerateToken(userId)
 	if err != nil {
@@ -37,4 +39,20 @@ func TestExtractToken(t *testing.T) {
 
 		t.Log(fmt.Sprintf("Token: %v", token))
 	}
+}
+
+func TestParseTokenInvalidSigningMethod(t *testing.T) {
+    _, err := ParseToken("invalid-token")
+    assert.Error(t, err)
+}
+
+func TestParseTokenValid(t *testing.T) {
+    sendToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{})
+    tokenString, err := sendToken.SignedString([]byte(os.Getenv("SECRET_KEY")))
+    assert.NoError(t, err)
+
+    actualToken, err := ParseToken(tokenString)
+	t.Log(actualToken)
+    assert.NoError(t, err)
+    assert.NotNil(t, actualToken)
 }
