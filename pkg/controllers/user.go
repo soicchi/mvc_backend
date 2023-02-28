@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/soicchi/chatapp_backend/pkg/models"
@@ -23,7 +25,15 @@ func (handler *Handler) GetUsers(context *gin.Context) {
 }
 
 func (handler *Handler) GetUser(context *gin.Context) {
-	userId := c.Param("id")
+	userId, err := strconv.Atoi(context.Param("id"))
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"message": "Invalid user id",
+		})
+		return
+	}
+
 	user, err := models.FindUserById(handler.DB, userId)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{
@@ -33,7 +43,7 @@ func (handler *Handler) GetUser(context *gin.Context) {
 		return
 	}
 
-	context.JSON(https.StatusOK, gin.H{
+	context.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
 }
