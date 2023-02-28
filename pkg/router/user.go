@@ -12,5 +12,6 @@ func addUserRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 	users.Use(middleware.AuthMiddleware)
 	{
 		users.GET("", handler.GetUsers)
+		users.GET("/:id", handler.GetUser)
 	}
 }
