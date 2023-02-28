@@ -51,6 +51,13 @@ func FindAllUsers(db *gorm.DB) ([]User, error) {
 	return users, result.Error
 }
 
+func FindUserById(db *gorm.DB, id int) (User, error){
+	var targetUser User
+	result := db.Where("id = ?", id).First($targetUser)
+
+	return targetUser, result.Error
+}
+
 // TODO: 下記メソッド名をLoginValidateに変更
 func (u *User) Validate() error {
 	err := validation.ValidateStruct(u,
