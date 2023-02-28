@@ -21,3 +21,19 @@ func (handler *Handler) GetUsers(context *gin.Context) {
 		"users": users,
 	})
 }
+
+func (handler *Handler) GetUser(context *gin.Context) {
+	userId := c.Param("id")
+	user, err := models.FindUserById(handler.DB, userId)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+			"message": "Failed to get user",
+		})
+		return
+	}
+
+	context.JSON(https.StatusOK, gin.H{
+		"user": user,
+	})
+}
