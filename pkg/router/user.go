@@ -13,5 +13,6 @@ func addUserRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 	{
 		users.GET("", handler.GetUsers)
 		users.GET("/:id", handler.GetUser)
+		users.PUT("/:id", handler.UpdateUser)
 	}
 }
