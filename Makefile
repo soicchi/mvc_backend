@@ -1,14 +1,22 @@
+.PHONY: up download build test fmt secret_key
+
+up:
+	docker compose up -d && sleep 3 && docker compose up
+
+stop:
+	docker compose stop
+
 download:
-	go mod tidy && go mod vendor
+	docker compose run --rm api go mod tidy && go mod vendor
 
 build:
-	go build -o app ./cmd/chatapp
+	docker compose run --rm api go build -o app ./cmd/chatapp
 
 test:
-	go test -cover ./...
+	docker compose run --rm api go test -cover ./...
 
 fmt:
-	go fmt ./...
+	docker compose run --rm api go fmt ./...
 
 secret_key:
-	openssl rand -base64 32
+	docker compose run --rm api openssl rand -base64 32

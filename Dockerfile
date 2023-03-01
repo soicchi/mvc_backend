@@ -11,7 +11,7 @@ FROM golang:1.20-alpine3.16 AS dev
 ENV ROOT /app \
     TZ Asia/Tokyo
 WORKDIR ${ROOT}
-RUN apk update && apk add --no-cache git make openssl
+RUN apk update && apk add --no-cache git openssl
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
