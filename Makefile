@@ -1,4 +1,7 @@
-.PHONY: up download build test fmt secret_key
+.PHONY: setup up download build test fmt secret_key
+
+setup:
+	docker compose build
 
 up:
 	docker compose up -d && sleep 3 && docker compose up
