@@ -71,6 +71,12 @@ func (user *User) Update(db *gorm.DB, updateInput UpdateUserInput) (*User, error
 	return user, result.Error
 }
 
+func (user *User) Delete(db *gorm.DB) error {
+	result := db.Delete(&user)
+
+	return result.Error
+}
+
 // TODO: 下記メソッド名をSignUpValidateに変更
 func (user *User) Validate() error {
 	err := validation.ValidateStruct(user,
