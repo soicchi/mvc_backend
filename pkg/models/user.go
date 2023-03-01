@@ -51,25 +51,39 @@ func FindAllUsers(db *gorm.DB) ([]User, error) {
 	return users, result.Error
 }
 
-func FindUserById(db *gorm.DB, id int) (User, error){
+func FindUserById(db *gorm.DB, id uint) (User, error){
 	var user User
 	result := db.Where("id = ?", id).First(&user)
 
 	return user, result.Error
 }
 
+func (user *User) Update(db *gorm.DB) (User, error) {
+	targetUser, err := FindUserById(db, user.ID)
+	if err != nil {
+		return User{}, err
+	}
+
+	targetUser.Name = user.Name
+	targetUser.Email = user.Email
+	targetUser.Password = utils.Encrypt(user.Password)
+	result := db.Save(&targetUser)
+
+	return targetUser, result.Error
+}
+
 // TODO: 下記メソッド名をSignUpValidateに変更
-func (u *User) Validate() error {
-	err := validation.ValidateStruct(u,
-		validation.Field(&u.Name,
+func (user *User) Validate() error {
+	err := validation.ValidateStruct(user,
+		validation.Field(&user.Name,
 			validation.Required.Error("Name is required"),
 			validation.Length(1, 255).Error("Name is too long"),
 		),
-		validation.Field(&u.Email,
+		validation.Field(&user.Email,
 			validation.Required.Error("Email is required"),
 			is.Email.Error("invalid format"),
 		),
-		validation.Field(&u.Password,
+		validation.Field(&user.Password,
 			validation.Required.Error("Password is required"),
 			validation.Length(8, 255).Error("less than 7 chars or more than 256 chars"),
 		),
