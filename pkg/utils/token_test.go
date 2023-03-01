@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateToken(t *testing.T) {
@@ -42,17 +42,17 @@ func TestExtractToken(t *testing.T) {
 }
 
 func TestParseTokenInvalidSigningMethod(t *testing.T) {
-    _, err := ParseToken("invalid-token")
-    assert.Error(t, err)
+	_, err := ParseToken("invalid-token")
+	assert.Error(t, err)
 }
 
 func TestParseTokenValid(t *testing.T) {
-    sendToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{})
-    tokenString, err := sendToken.SignedString([]byte(os.Getenv("SECRET_KEY")))
-    assert.NoError(t, err)
+	sendToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{})
+	tokenString, err := sendToken.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	assert.NoError(t, err)
 
-    actualToken, err := ParseToken(tokenString)
+	actualToken, err := ParseToken(tokenString)
 	t.Log(actualToken)
-    assert.NoError(t, err)
-    assert.NotNil(t, actualToken)
+	assert.NoError(t, err)
+	assert.NotNil(t, actualToken)
 }

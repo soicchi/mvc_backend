@@ -27,8 +27,8 @@ type LoginInput struct {
 }
 
 type UpdateUserInput struct {
-	Name     string `json:"name" binding:"required"`
-	Email   string `json:"email" binding:"required"`
+	Name  string `json:"name" binding:"required"`
+	Email string `json:"email" binding:"required"`
 }
 
 func (u *User) Create(db *gorm.DB) (User, error) {
@@ -56,7 +56,7 @@ func FindAllUsers(db *gorm.DB) ([]User, error) {
 	return users, result.Error
 }
 
-func FindUserById(db *gorm.DB, id uint) (User, error){
+func FindUserById(db *gorm.DB, id uint) (User, error) {
 	var user User
 	result := db.Where("id = ?", id).First(&user)
 
@@ -69,6 +69,12 @@ func (user *User) Update(db *gorm.DB, updateInput UpdateUserInput) (*User, error
 	result := db.Save(&user)
 
 	return user, result.Error
+}
+
+func (user *User) Delete(db *gorm.DB) error {
+	result := db.Delete(&user)
+
+	return result.Error
 }
 
 // TODO: 下記メソッド名をSignUpValidateに変更
