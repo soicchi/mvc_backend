@@ -89,3 +89,35 @@ func (handler *Handler) UpdateUser(context *gin.Context) {
 		"user": updatedUser,
 	})
 }
+
+func (handler *Handler) DeleteUser(c *gin.Context) {
+	userId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"message": "Invalid user id",
+		})
+		return
+	}
+
+	user, err := models.FindUserById(handler.DB, uint(userId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+			"message": "Failed to get user",
+		})
+		return
+	}
+
+	if err = user.Delete(handler.DB); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+			"message": "Failed to delete user",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User deleted",
+	})
+}
