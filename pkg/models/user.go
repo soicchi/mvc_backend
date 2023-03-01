@@ -26,6 +26,11 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type UpdateInput struct {
+	Name     string `json:"name" binding:"required"`
+	Email   string `json:"email" binding:"required"`
+}
+
 func (u *User) Create(db *gorm.DB) (User, error) {
 	user := User{
 		Name:     u.Name,
@@ -66,7 +71,6 @@ func (user *User) Update(db *gorm.DB) (User, error) {
 
 	targetUser.Name = user.Name
 	targetUser.Email = user.Email
-	targetUser.Password = utils.Encrypt(user.Password)
 	result := db.Save(&targetUser)
 
 	return targetUser, result.Error
