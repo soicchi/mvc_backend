@@ -34,7 +34,7 @@ func (handler *Handler) GetUser(context *gin.Context) {
 		return
 	}
 
-	user, err := models.FindUserById(handler.DB, userId)
+	user, err := models.FindUserById(handler.DB, uint(userId))
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -45,5 +45,47 @@ func (handler *Handler) GetUser(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{
 		"user": user,
+	})
+}
+
+func (handler *Handler) UpdateUser(context *gin.Context) {
+	var updateInput models.UpdateUserInput
+	if err := context.ShouldBind(&updateInput); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	userId, err := strconv.Atoi(context.Param("id"))
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"message": "Invalid user id",
+		})
+		return
+	}
+
+	user, err := models.FindUserById(handler.DB, uint(userId))
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+			"message": "Failed to get user",
+		})
+		return
+	}
+
+	updatedUser, err := user.Update(handler.DB, updateInput)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+			"message": "Failed to update user",
+		})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"user": updatedUser,
 	})
 }
