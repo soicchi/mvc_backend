@@ -7,27 +7,28 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/soicchi/chatapp_backend/pkg/models"
+	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-func (handler *Handler) GetUsers(context *gin.Context) {
+func (handler *Handler) GetUsers(ctx *gin.Context) {
 	users, err := models.FindAllUsers(handler.DB)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to get users",
 		})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"users": users,
 	})
 }
 
-func (handler *Handler) GetUser(context *gin.Context) {
-	userId, err := strconv.Atoi(context.Param("id"))
+func (handler *Handler) GetUser(ctx *gin.Context) {
+	userId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid user id",
 		})
@@ -36,40 +37,49 @@ func (handler *Handler) GetUser(context *gin.Context) {
 
 	user, err := models.FindUserById(handler.DB, uint(userId))
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to get user",
 		})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
 }
 
-func (handler *Handler) UpdateUser(context *gin.Context) {
+func (handler *Handler) UpdateUser(ctx *gin.Context) {
 	var updateInput models.UpdateUserInput
-	if err := context.ShouldBind(&updateInput); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+	if err := ctx.ShouldBind(&updateInput); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
 		return
 	}
 
-	userId, err := strconv.Atoi(context.Param("id"))
+	userId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid user id",
 		})
 		return
 	}
 
+	authHeader := ctx.Request.Header.Get("Authorization")
+	ok := utils.VerifyUserId(uint(userId), authHeader)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Cannot update other user's account",
+		})
+		return
+	}
+
 	user, err := models.FindUserById(handler.DB, uint(userId))
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to get user",
 		})
@@ -78,31 +88,40 @@ func (handler *Handler) UpdateUser(context *gin.Context) {
 
 	updatedUser, err := user.Update(handler.DB, updateInput)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to update user",
 		})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"user": updatedUser,
 	})
 }
 
-func (handler *Handler) DeleteUser(c *gin.Context) {
-	userId, err := strconv.Atoi(c.Param("id"))
+func (handler *Handler) DeleteUser(ctx *gin.Context) {
+	userId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid user id",
 		})
 		return
 	}
 
+	authHeader := ctx.Request.Header.Get("Authorization")
+	ok := utils.VerifyUserId(uint(userId), authHeader)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Cannot delete other user's account",
+		})
+		return
+	}
+
 	user, err := models.FindUserById(handler.DB, uint(userId))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to get user",
 		})
@@ -110,14 +129,14 @@ func (handler *Handler) DeleteUser(c *gin.Context) {
 	}
 
 	if err = user.Delete(handler.DB); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to delete user",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": "User deleted",
 	})
 }

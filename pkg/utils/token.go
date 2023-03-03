@@ -55,3 +55,36 @@ func ParseToken(tokenString string) (*jwt.Token, error) {
 	}
 	return token, nil
 }
+
+func ExtractUserIdFromToken(token *jwt.Token) (uint, error) {
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, fmt.Errorf("Invalid token")
+	}
+
+	userId, ok := claims["user_id"].(uint)
+	if !ok {
+		return 0, fmt.Errorf("Invalid token")
+	}
+
+	return userId, nil
+}
+
+func VerifyUserId(userId uint, authHeader string) bool {
+	token ,err := ExtractToken(authHeader)
+	if err != nil {
+		return false
+	}
+
+	parsedToken, err := ParseToken(token)
+	if err != nil {
+		return false
+	}
+
+	userIdFromToken, err := ExtractUserIdFromToken(parsedToken)
+	if err != nil {
+		return false
+	}
+
+	return userId == userIdFromToken
+}

@@ -52,7 +52,34 @@ func TestParseTokenValid(t *testing.T) {
 	assert.NoError(t, err)
 
 	actualToken, err := ParseToken(tokenString)
-	t.Log(actualToken)
 	assert.NoError(t, err)
 	assert.NotNil(t, actualToken)
 }
+
+func TestExtractUserIdFromToken(t *testing.T) {
+	claims := jwt.MapClaims{
+		"user_id": uint(1),
+	}
+	sendToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	userId, err := ExtractUserIdFromToken(sendToken)
+	if err != nil {
+		t.Errorf("Error: %v", err)
+	}
+	assert.Equal(t, userId, uint(1))
+}
+
+// TODO: Fix this test
+// func TestVerifyUserId(t *testing.T) {
+// 	claims := jwt.MapClaims{
+// 		"user_id": uint(1),
+// 	}
+// 	sendToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+// 	t.Log(sendToken.Raw)
+// 	testHeader := "Bearer " + sendToken.Raw
+// 	testUserId := uint(1)
+// 	ok, err := VerifyUserId(testUserId, testHeader)
+// 	if err != nil {
+// 		t.Errorf("Error: %v", err)
+// 	}
+// 	assert.Equal(t, ok, true)
+// }
