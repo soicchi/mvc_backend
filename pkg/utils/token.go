@@ -70,21 +70,21 @@ func ExtractUserIdFromToken(token *jwt.Token) (uint, error) {
 	return userId, nil
 }
 
-func VerifyUserId(userId uint, authHeader string) (bool, error) {
+func VerifyUserId(userId uint, authHeader string) bool {
 	token ,err := ExtractToken(authHeader)
 	if err != nil {
-		return false, err
+		return false
 	}
 
 	parsedToken, err := ParseToken(token)
 	if err != nil {
-		return false, err
+		return false
 	}
 
 	userIdFromToken, err := ExtractUserIdFromToken(parsedToken)
 	if err != nil {
-		return false, err
+		return false
 	}
 
-	return userId == userIdFromToken, nil
+	return userId == userIdFromToken
 }
