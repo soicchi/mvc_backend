@@ -13,6 +13,7 @@ type User struct {
 	Name     string `gorm:"size:255;not null"`
 	Email    string `gorm:"size:255;not null;unique"`
 	Password string `gorm:"size:255;not null"`
+	Posts    []Post
 }
 
 type SignUpInput struct {
