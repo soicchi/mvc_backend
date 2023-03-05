@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/go-ozzo/ozzo-validation"
 	"gorm.io/gorm"
 )
 
