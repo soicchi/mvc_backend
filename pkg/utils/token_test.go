@@ -58,7 +58,7 @@ func TestParseTokenValid(t *testing.T) {
 
 func TestExtractUserIdFromToken(t *testing.T) {
 	claims := jwt.MapClaims{
-		"user_id": uint(1),
+		"user_id": 1.0,
 	}
 	sendToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	userId, err := ExtractUserIdFromToken(sendToken)
