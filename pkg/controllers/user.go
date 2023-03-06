@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/soicchi/chatapp_backend/pkg/models"
-	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
 func (handler *Handler) GetUsers(ctx *gin.Context) {
@@ -59,25 +58,8 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	userId, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
-			"message": "Invalid user id",
-		})
-		return
-	}
-
-	authHeader := ctx.Request.Header.Get("Authorization")
-	ok := utils.VerifyUserId(uint(userId), authHeader)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Cannot update other user's account",
-		})
-		return
-	}
-
-	user, err := models.FindUserById(handler.DB, uint(userId))
+	userId := ctx.GetUint("userId")
+	user, err := models.FindUserById(handler.DB, userId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
@@ -101,25 +83,8 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 }
 
 func (handler *Handler) DeleteUser(ctx *gin.Context) {
-	userId, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
-			"message": "Invalid user id",
-		})
-		return
-	}
-
-	authHeader := ctx.Request.Header.Get("Authorization")
-	ok := utils.VerifyUserId(uint(userId), authHeader)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Cannot delete other user's account",
-		})
-		return
-	}
-
-	user, err := models.FindUserById(handler.DB, uint(userId))
+	userId := ctx.GetUint("userId")
+	user, err := models.FindUserById(handler.DB, userId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),

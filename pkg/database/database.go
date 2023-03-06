@@ -38,5 +38,6 @@ func ExecMigration() {
 	// 新たにmodelを追加したらここに記載
 	db.AutoMigrate(
 		&models.User{},
+		&models.Post{},
 	)
 }

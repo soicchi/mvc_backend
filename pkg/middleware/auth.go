@@ -8,27 +8,38 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-func AuthMiddleware(context *gin.Context) {
-	authHeader := context.GetHeader("Authorization")
+func AuthMiddleware(ctx *gin.Context) {
+	authHeader := ctx.GetHeader("Authorization")
 	tokenString, err := utils.ExtractToken(authHeader)
 	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{
+		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid token",
 		})
-		context.Abort()
+		ctx.Abort()
 		return
 	}
 
-	_, err = utils.ParseToken(tokenString)
+	token, err := utils.ParseToken(tokenString)
 	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{
+		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid token",
 		})
-		context.Abort()
+		ctx.Abort()
 		return
 	}
 
-	context.Next()
+	userId, err := utils.ExtractUserIdFromToken(token)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error":   err.Error(),
+			"message": "Invalid token",
+		})
+		ctx.Abort()
+		return
+	}
+
+	ctx.Set("userId", userId)
+	ctx.Next()
 }

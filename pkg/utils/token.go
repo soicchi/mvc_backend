@@ -59,32 +59,14 @@ func ParseToken(tokenString string) (*jwt.Token, error) {
 func ExtractUserIdFromToken(token *jwt.Token) (uint, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, fmt.Errorf("Invalid token")
+		return 0, fmt.Errorf("cannot convert claims to MapClaims")
 	}
 
-	userId, ok := claims["user_id"].(uint)
+	userId, ok := claims["user_id"]
 	if !ok {
-		return 0, fmt.Errorf("Invalid token")
+		return 0, fmt.Errorf("Does not have user_id in token claims")
 	}
+	userIdUint := uint(userId.(float64))
 
-	return userId, nil
-}
-
-func VerifyUserId(userId uint, authHeader string) bool {
-	token, err := ExtractToken(authHeader)
-	if err != nil {
-		return false
-	}
-
-	parsedToken, err := ParseToken(token)
-	if err != nil {
-		return false
-	}
-
-	userIdFromToken, err := ExtractUserIdFromToken(parsedToken)
-	if err != nil {
-		return false
-	}
-
-	return userId == userIdFromToken
+	return userIdUint, nil
 }
