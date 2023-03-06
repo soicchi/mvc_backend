@@ -11,6 +11,8 @@ func addPostRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 	posts := routerGroup.Group("/posts")
 	posts.Use(middleware.AuthMiddleware)
 	{
+		posts.GET("", handler.GetAllPosts)
+		posts.GET("/:id", handler.GetPost)
 		posts.POST("/create", handler.CreatePost)
 	}
 }

@@ -25,6 +25,20 @@ func (post *Post) Create(db *gorm.DB) (Post, error) {
 	return newPost, result.Error
 }
 
+func FindAllPosts(db *gorm.DB) ([]Post, error) {
+	var posts []Post
+	result := db.Find(&posts)
+
+	return posts, result.Error
+}
+
+func FindPostById(db *gorm.DB, postId uint) (Post, error) {
+	var post Post
+	result := db.First(&post, postId)
+
+	return post, result.Error
+}
+
 func (post *Post) Validate() error {
 	err := validation.ValidateStruct(post,
 		validation.Field(&post.Content,
