@@ -32,15 +32,15 @@ type UpdateUserInput struct {
 	Email string `json:"email" binding:"required"`
 }
 
-func (u *User) Create(db *gorm.DB) (User, error) {
-	user := User{
-		Name:     u.Name,
-		Email:    u.Email,
-		Password: utils.Encrypt(u.Password),
+func (user *User) Create(db *gorm.DB) (User, error) {
+	newUser := User{
+		Name:     user.Name,
+		Email:    user.Email,
+		Password: utils.Encrypt(user.Password),
 	}
-	result := db.Create(&user)
+	result := db.Create(&newUser)
 
-	return user, result.Error
+	return newUser, result.Error
 }
 
 func FindUserByEmail(db *gorm.DB, email string) (User, error) {
