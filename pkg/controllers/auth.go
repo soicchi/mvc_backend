@@ -20,12 +20,12 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 		return
 	}
 
-	newUser := &models.User{
+	user := &models.User{
 		Name:     signUpInput.Name,
 		Email:    signUpInput.Email,
 		Password: signUpInput.Password,
 	}
-	err = newUser.Validate()
+	err = user.Validate()
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
@@ -34,7 +34,7 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 		return
 	}
 
-	user, err := newUser.Create(handler.DB)
+	newUser, err := user.Create(handler.DB)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
@@ -43,7 +43,7 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(user.ID)
+	token, err := utils.GenerateToken(newUser.ID)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
@@ -53,7 +53,7 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, gin.H{
-		"user_id": user.ID,
+		"user_id": newUser.ID,
 		"token":   token,
 		"message": "Successfully created user",
 	})

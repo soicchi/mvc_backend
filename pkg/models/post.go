@@ -1,11 +1,36 @@
 package models
 
 import (
+	"github.com/go-ozzo/ozzo-validation"
 	"gorm.io/gorm"
 )
 
 type Post struct {
 	gorm.Model
-	content string `gorm:"size:255;not null"`
-	UserID  uint   `gorm:"not null"`
+	Content string
+	UserID  uint
+}
+
+type CreatePostInput struct {
+	Content string `json:"content" binding:"required"`
+}
+
+func (post *Post) Create(db *gorm.DB) (Post, error) {
+	newPost := Post{
+		Content: post.Content,
+		UserID:  post.UserID,
+	}
+	result := db.Create(&newPost)
+
+	return newPost, result.Error
+}
+
+func (post *Post) Validate() error {
+	err := validation.ValidateStruct(post,
+		validation.Field(&post.Content,
+			validation.Required.Error("Content is required"),
+			validation.Length(1, 255).Error("Content must be between 1 and 255 characters"),
+		),
+	)
+	return err
 }
