@@ -9,11 +9,13 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-func (handler *Handler) SignUpHandler(context *gin.Context) {
+var cookieMaxAge int = 60 * 60 * 24 * 30
+
+func (handler *Handler) SignUpHandler(ctx *gin.Context) {
 	var signUpInput models.SignUpInput
-	err := context.ShouldBind(&signUpInput)
+	err := ctx.ShouldBind(&signUpInput)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
@@ -27,7 +29,7 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 	}
 	err = user.Validate()
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
@@ -36,7 +38,7 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 
 	newUser, err := user.Create(handler.DB)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to create user",
 		})
@@ -45,25 +47,25 @@ func (handler *Handler) SignUpHandler(context *gin.Context) {
 
 	token, err := utils.GenerateToken(newUser.ID)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to generate token",
 		})
 		return
 	}
+	ctx.SetCookie("token", token, cookieMaxAge, "/", "localhost", false, true)
 
-	context.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"user_id": newUser.ID,
-		"token":   token,
 		"message": "Successfully created user",
 	})
 }
 
-func (handler *Handler) LoginHandler(context *gin.Context) {
+func (handler *Handler) LoginHandler(ctx *gin.Context) {
 	var loginInput models.LoginInput
-	err := context.ShouldBind(&loginInput)
+	err := ctx.ShouldBind(&loginInput)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
@@ -72,7 +74,7 @@ func (handler *Handler) LoginHandler(context *gin.Context) {
 
 	user, err := models.FindUserByEmail(handler.DB, loginInput.Email)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to find user",
 		})
@@ -80,7 +82,7 @@ func (handler *Handler) LoginHandler(context *gin.Context) {
 	}
 
 	if !user.VerifyPassword(loginInput.Password) {
-		context.JSON(http.StatusUnauthorized, gin.H{
+		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Password is invalid",
 		})
 		return
@@ -88,15 +90,15 @@ func (handler *Handler) LoginHandler(context *gin.Context) {
 
 	token, err := utils.GenerateToken(user.ID)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"message": "Failed to generate token",
 		})
 		return
 	}
+	ctx.SetCookie("token", token, cookieMaxAge, "/", "localhost", false, true)
 
-	context.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Successfully logged in",
-		"token":   token,
 	})
 }

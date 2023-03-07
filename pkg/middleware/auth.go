@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 
@@ -9,8 +10,9 @@ import (
 )
 
 func AuthMiddleware(ctx *gin.Context) {
-	authHeader := ctx.GetHeader("Authorization")
-	tokenString, err := utils.ExtractToken(authHeader)
+	tokenString, err := ctx.Cookie("token")
+	fmt.Println(ctx.Request)
+	fmt.Println(tokenString)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error":   err.Error(),
