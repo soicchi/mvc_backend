@@ -10,10 +10,8 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-var postLogFile string = "post.log"
-
 func (handler *Handler) CreatePost(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(postLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +46,7 @@ func (handler *Handler) CreatePost(ctx *gin.Context) {
 }
 
 func (handler *Handler) GetAllPosts(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(postLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}
@@ -69,7 +67,7 @@ func (handler *Handler) GetAllPosts(ctx *gin.Context) {
 }
 
 func (handler *Handler) GetPost(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(postLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}

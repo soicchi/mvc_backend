@@ -10,10 +10,8 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-var userLogFile string = "user.log"
-
 func (handler *Handler) GetUsers(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(userLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +31,7 @@ func (handler *Handler) GetUsers(ctx *gin.Context) {
 }
 
 func (handler *Handler) GetUser(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(userLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +60,7 @@ func (handler *Handler) GetUser(ctx *gin.Context) {
 }
 
 func (handler *Handler) UpdateUser(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(userLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}
@@ -101,7 +99,7 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 }
 
 func (handler *Handler) DeleteUser(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(userLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}

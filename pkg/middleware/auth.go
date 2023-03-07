@@ -8,10 +8,9 @@ import (
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
-var authLogFile string = "auth.log"
 
 func AuthMiddleware(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(authLogFile)
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}
