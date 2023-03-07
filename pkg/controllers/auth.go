@@ -10,13 +10,19 @@ import (
 )
 
 var cookieMaxAge int = 60 * 60 * 24 * 30
+var logFileName string = "auth.log"
 
 func (handler *Handler) SignUpHandler(ctx *gin.Context) {
-	var signUpInput models.SignUpInput
-	err := ctx.ShouldBind(&signUpInput)
+	logger, err := utils.SetupLogger(logFileName)
 	if err != nil {
+		panic(err)
+	}
+
+	var signUpInput models.SignUpInput
+	err = ctx.ShouldBind(&signUpInput)
+	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
 		return
@@ -29,17 +35,17 @@ func (handler *Handler) SignUpHandler(ctx *gin.Context) {
 	}
 	err = user.Validate()
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
-			"message": "Invalid request body",
+			"message": err.Error(),
 		})
 		return
 	}
 
 	newUser, err := user.Create(handler.DB)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to create user",
 		})
 		return
@@ -47,9 +53,9 @@ func (handler *Handler) SignUpHandler(ctx *gin.Context) {
 
 	token, err := utils.GenerateToken(newUser.ID)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
-			"message": "Failed to generate token",
+			"message": "Failed to sign up",
 		})
 		return
 	}
@@ -62,11 +68,16 @@ func (handler *Handler) SignUpHandler(ctx *gin.Context) {
 }
 
 func (handler *Handler) LoginHandler(ctx *gin.Context) {
-	var loginInput models.LoginInput
-	err := ctx.ShouldBind(&loginInput)
+	logger, err := utils.SetupLogger(logFileName)
 	if err != nil {
+		panic(err)
+	}
+
+	var loginInput models.LoginInput
+	err = ctx.ShouldBind(&loginInput)
+	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
 		return
@@ -74,8 +85,8 @@ func (handler *Handler) LoginHandler(ctx *gin.Context) {
 
 	user, err := models.FindUserByEmail(handler.DB, loginInput.Email)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to find user",
 		})
 		return
@@ -90,9 +101,9 @@ func (handler *Handler) LoginHandler(ctx *gin.Context) {
 
 	token, err := utils.GenerateToken(user.ID)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
-			"message": "Failed to generate token",
+			"message": "Failed to sign up",
 		})
 		return
 	}
