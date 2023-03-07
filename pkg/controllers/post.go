@@ -28,7 +28,7 @@ func (handler *Handler) CreatePost(ctx *gin.Context) {
 	userId := ctx.GetUint("userId")
 	post := models.Post{
 		Content: postInput.Content,
-		UserID: userId,
+		UserID:  userId,
 	}
 	newPost, err := post.Create(handler.DB)
 	if err != nil {
@@ -40,7 +40,7 @@ func (handler *Handler) CreatePost(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"post": newPost,
+		"post":    newPost,
 		"message": "Post created successfully",
 	})
 }
@@ -61,7 +61,7 @@ func (handler *Handler) GetAllPosts(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"posts": posts,
+		"posts":   posts,
 		"message": "Posts fetched successfully",
 	})
 }
@@ -91,7 +91,7 @@ func (handler *Handler) GetPost(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"post": post,
+		"post":    post,
 		"message": "Post fetched successfully",
 	})
 }
