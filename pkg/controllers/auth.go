@@ -10,10 +10,10 @@ import (
 )
 
 var cookieMaxAge int = 60 * 60 * 24 * 30
-var logFileName string = "auth.log"
+var authLogFile string = "auth.log"
 
 func (handler *Handler) SignUpHandler(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(logFileName)
+	logger, err := utils.SetupLogger(authLogFile)
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +68,7 @@ func (handler *Handler) SignUpHandler(ctx *gin.Context) {
 }
 
 func (handler *Handler) LoginHandler(ctx *gin.Context) {
-	logger, err := utils.SetupLogger(logFileName)
+	logger, err := utils.SetupLogger(authLogFile)
 	if err != nil {
 		panic(err)
 	}
