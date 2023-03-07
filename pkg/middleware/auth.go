@@ -2,21 +2,25 @@ package middleware
 
 import (
 	"net/http"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
+var authLogFile string = "auth.log"
+
 func AuthMiddleware(ctx *gin.Context) {
-	tokenString, err := ctx.Cookie("token")
-	fmt.Println(ctx.Request)
-	fmt.Println(tokenString)
+	logger, err := utils.SetupLogger(authLogFile)
 	if err != nil {
+		panic(err)
+	}
+
+	tokenString, err := ctx.Cookie("token")
+	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error":   err.Error(),
-			"message": "Invalid token",
+			"message": "Unauthorized",
 		})
 		ctx.Abort()
 		return
@@ -24,8 +28,8 @@ func AuthMiddleware(ctx *gin.Context) {
 
 	token, err := utils.ParseToken(tokenString)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid token",
 		})
 		ctx.Abort()
@@ -34,8 +38,8 @@ func AuthMiddleware(ctx *gin.Context) {
 
 	userId, err := utils.ExtractUserIdFromToken(token)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid token",
 		})
 		ctx.Abort()
