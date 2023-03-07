@@ -13,7 +13,6 @@ func TestAuthMiddleware(t *testing.T) {
 	response := httptest.NewRecorder()
 	context, _ := gin.CreateTestContext(response)
 	request, _ := http.NewRequest("GET", "/", nil)
-	request.Header.Add("Authorization", "Bearer")
 	context.Request = request
 	AuthMiddleware(context)
 

@@ -22,25 +22,6 @@ func TestGenerateToken(t *testing.T) {
 	t.Log(fmt.Sprintf("Token: %v", token))
 }
 
-func TestExtractToken(t *testing.T) {
-	testHeaders := []string{
-		"Bearer samplesamplesample",
-		"samplesample",
-		"Bearer",
-		"",
-	}
-	assert := assert.New(t)
-	for _, header := range testHeaders {
-		token, err := ExtractToken(header)
-		if err != nil {
-			assert.Equal(err, fmt.Errorf("Invalid token: %s", header))
-			assert.Equal(token, "")
-		}
-
-		t.Log(fmt.Sprintf("Token: %v", token))
-	}
-}
-
 func TestParseTokenInvalidSigningMethod(t *testing.T) {
 	_, err := ParseToken("invalid-token")
 	assert.Error(t, err)

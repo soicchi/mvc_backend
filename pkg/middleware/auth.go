@@ -9,12 +9,16 @@ import (
 )
 
 func AuthMiddleware(ctx *gin.Context) {
-	authHeader := ctx.GetHeader("Authorization")
-	tokenString, err := utils.ExtractToken(authHeader)
+	logger, err := utils.SetupLogger()
 	if err != nil {
+		panic(err)
+	}
+
+	tokenString, err := ctx.Cookie("token")
+	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error":   err.Error(),
-			"message": "Invalid token",
+			"message": "Unauthorized",
 		})
 		ctx.Abort()
 		return
@@ -22,8 +26,8 @@ func AuthMiddleware(ctx *gin.Context) {
 
 	token, err := utils.ParseToken(tokenString)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid token",
 		})
 		ctx.Abort()
@@ -32,8 +36,8 @@ func AuthMiddleware(ctx *gin.Context) {
 
 	userId, err := utils.ExtractUserIdFromToken(token)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid token",
 		})
 		ctx.Abort()

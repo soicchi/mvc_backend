@@ -6,26 +6,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SetupLogger(logFilePath string) (*log.Logger, error) {
+func SetupLogger() (*log.Logger, error) {
 	logger := log.New()
 	setLoggerConfig(logger)
 
-	file, err := getLogFile(logFilePath)
-	if err != nil {
-		return nil, err
-	}
-
-	logger.SetOutput(file)
+	logger.SetOutput(os.Stdout)
 	return logger, nil
-}
-
-func getLogFile(logFilePath string) (*os.File, error) {
-	file, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		return nil, err
-	}
-
-	return file, nil
 }
 
 func setLoggerConfig(l *log.Logger) {

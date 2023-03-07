@@ -5,7 +5,7 @@
 mysql
 
 # log file
-app.log
+logs/development
 
 # module dependencies
 vendor

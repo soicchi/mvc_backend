@@ -7,13 +7,19 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/soicchi/chatapp_backend/pkg/models"
+	"github.com/soicchi/chatapp_backend/pkg/utils"
 )
 
 func (handler *Handler) GetUsers(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
 	users, err := models.FindAllUsers(handler.DB)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to get users",
 		})
 		return
@@ -25,10 +31,15 @@ func (handler *Handler) GetUsers(ctx *gin.Context) {
 }
 
 func (handler *Handler) GetUser(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
 	userId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid user id",
 		})
 		return
@@ -36,8 +47,8 @@ func (handler *Handler) GetUser(ctx *gin.Context) {
 
 	user, err := models.FindUserById(handler.DB, uint(userId))
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to get user",
 		})
 		return
@@ -49,10 +60,15 @@ func (handler *Handler) GetUser(ctx *gin.Context) {
 }
 
 func (handler *Handler) UpdateUser(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
 	var updateInput models.UpdateUserInput
 	if err := ctx.ShouldBind(&updateInput); err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
 			"message": "Invalid request body",
 		})
 		return
@@ -61,8 +77,8 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 	userId := ctx.GetUint("userId")
 	user, err := models.FindUserById(handler.DB, userId)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to get user",
 		})
 		return
@@ -83,19 +99,24 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 }
 
 func (handler *Handler) DeleteUser(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
 	userId := ctx.GetUint("userId")
 	user, err := models.FindUserById(handler.DB, userId)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to get user",
 		})
 		return
 	}
 
 	if err = user.Delete(handler.DB); err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to delete user",
 		})
 		return

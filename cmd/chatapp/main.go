@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	logger, err := utils.SetupLogger("app.log")
+	logger, err := utils.SetupLogger()
 	if err != nil {
 		panic(err)
 	}

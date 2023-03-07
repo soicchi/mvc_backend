@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -28,19 +27,6 @@ func GenerateToken(userId uint) (string, error) {
 	}
 
 	return tokenString, nil
-}
-
-func ExtractToken(authHeader string) (string, error) {
-	if authHeader == "" {
-		return "", fmt.Errorf("Invalid token: %s", authHeader)
-	}
-
-	splitedHeader := strings.Split(authHeader, " ")
-	if len(splitedHeader) != 2 {
-		return "", fmt.Errorf("Invalid token: %s", authHeader)
-	}
-	token := splitedHeader[1]
-	return token, nil
 }
 
 func ParseToken(tokenString string) (*jwt.Token, error) {
