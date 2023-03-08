@@ -46,6 +46,12 @@ func (post *Post) Update(db *gorm.DB, postInput PostInput) (*Post, error) {
 	return post, result.Error
 }
 
+func (post *Post) Delete(db *gorm.DB) error {
+	result := db.Delete(&post)
+
+	return result.Error
+}
+
 func (post *Post) Validate() error {
 	err := validation.ValidateStruct(post,
 		validation.Field(&post.Content,
