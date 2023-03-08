@@ -65,15 +65,6 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 		panic(err)
 	}
 
-	var updateInput models.UpdateUserInput
-	if err := ctx.ShouldBind(&updateInput); err != nil {
-		logger.Error(err)
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid request body",
-		})
-		return
-	}
-
 	userId := ctx.GetUint("userId")
 	user, err := models.FindUserById(handler.DB, userId)
 	if err != nil {
@@ -84,10 +75,19 @@ func (handler *Handler) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
+	var updateInput models.UpdateUserInput
+	if err := ctx.ShouldBind(&updateInput); err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
 	updatedUser, err := user.Update(handler.DB, updateInput)
 	if err != nil {
+		logger.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
 			"message": "Failed to update user",
 		})
 		return

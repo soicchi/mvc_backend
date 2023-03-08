@@ -11,7 +11,7 @@ type Post struct {
 	UserID  uint
 }
 
-type CreatePostInput struct {
+type PostInput struct {
 	Content string `json:"content" binding:"required"`
 }
 
@@ -35,6 +35,13 @@ func FindAllPosts(db *gorm.DB) ([]Post, error) {
 func FindPostById(db *gorm.DB, postId uint) (Post, error) {
 	var post Post
 	result := db.First(&post, postId)
+
+	return post, result.Error
+}
+
+func (post *Post) Update(db *gorm.DB, postInput PostInput) (*Post, error) {
+	post.Content = postInput.Content
+	result := db.Save(&post)
 
 	return post, result.Error
 }

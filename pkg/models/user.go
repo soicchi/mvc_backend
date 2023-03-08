@@ -73,7 +73,7 @@ func (user *User) Update(db *gorm.DB, updateInput UpdateUserInput) (*User, error
 }
 
 func (user *User) Delete(db *gorm.DB) error {
-	result := db.Delete(&user)
+	result := db.Select("Posts").Delete(&user)
 
 	return result.Error
 }
