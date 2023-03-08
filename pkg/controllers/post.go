@@ -151,3 +151,48 @@ func (handler *Handler) UpdatePost(ctx *gin.Context) {
 		"message": "Post updated successfully",
 	})
 }
+
+func (handler *Handler) DeletePost(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
+	postId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid post id",
+		})
+		return
+	}
+
+	targetPost, err := models.FindPostById(handler.DB, uint(postId))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get post",
+		})
+		return
+	}
+
+	userId := ctx.GetUint("userId")
+	if targetPost.UserID != userId {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Unauthorized",
+		})
+		return
+	}
+
+	if err := targetPost.Delete(handler.DB); err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to delete post",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Post deleted successfully",
+	})
+}

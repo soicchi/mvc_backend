@@ -15,5 +15,6 @@ func addPostRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 		posts.GET("/:id", handler.GetPost)
 		posts.POST("/create", handler.CreatePost)
 		posts.PUT("/:id", handler.UpdatePost)
+		posts.DELETE("/:id", handler.DeletePost)
 	}
 }
