@@ -6,7 +6,7 @@ import (
 
 type Room struct {
 	gorm.Model
-	Name string
+	Name  string
 	Posts []Post `gorm:"foreignKey:RoomID"`
 }
 

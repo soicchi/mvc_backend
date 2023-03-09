@@ -25,7 +25,7 @@ func (handler *Handler) GetAllRooms(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"rooms": rooms,
+		"rooms":   rooms,
 		"message": "Rooms fetched successfully",
 	})
 }
