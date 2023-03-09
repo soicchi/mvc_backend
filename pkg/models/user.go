@@ -14,7 +14,7 @@ type User struct {
 	Email    string `gorm:"size:255;not null;unique"`
 	Password string `gorm:"size:255;not null"`
 	Posts    []Post `gorm:"foreignKey:UserID"`
-	Rooms    []Room `grom:"many2many:user_rooms;"`
+	Rooms    []Room `gorm:"many2many:user_rooms;"`
 }
 
 type SignUpInput struct {
