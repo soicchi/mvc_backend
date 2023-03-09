@@ -12,5 +12,6 @@ func addRoomRoutes(routerGroup *gin.RouterGroup, handler *controllers.Handler) {
 	rooms.Use(middleware.AuthMiddleware)
 	{
 		rooms.GET("", handler.GetAllRooms)
+		rooms.POST("/create", handler.CreateRoom)
 	}
 }
