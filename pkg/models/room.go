@@ -1,8 +1,8 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"github.com/go-ozzo/ozzo-validation"
+	"gorm.io/gorm"
 )
 
 type Room struct {
