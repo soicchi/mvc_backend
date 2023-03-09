@@ -24,6 +24,7 @@ func setupRouter() *gin.Engine {
 	addAuthRoutes(v1, handler)
 	addUserRoutes(v1, handler)
 	addPostRoutes(v1, handler)
+	addRoomRoutes(v1, handler)
 
 	return router
 }

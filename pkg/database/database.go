@@ -39,5 +39,6 @@ func ExecMigration() {
 	db.AutoMigrate(
 		&models.User{},
 		&models.Post{},
+		&models.Room{},
 	)
 }
