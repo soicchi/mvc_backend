@@ -15,3 +15,6 @@ app
 
 # coverage file
 coverage.out
+
+# test script file
+test.sh
