@@ -9,6 +9,7 @@ type Post struct {
 	gorm.Model
 	Content string
 	UserID  uint
+	RoomID  uint
 }
 
 type PostInput struct {
