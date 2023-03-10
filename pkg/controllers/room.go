@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -27,6 +28,36 @@ func (handler *Handler) GetAllRooms(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"rooms":   rooms,
 		"message": "Rooms fetched successfully",
+	})
+}
+
+func (handler *Handler) GetRoom(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request",
+		})
+		return
+	}
+
+	room, err := models.FindRoomById(handler.DB, uint(id))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get room",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"room":    room,
+		"message": "Room fetched successfully",
 	})
 }
 
@@ -68,5 +99,42 @@ func (handler *Handler) CreateRoom(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"room":    newRoom,
 		"message": "Room created successfully",
+	})
+}
+
+func (handler *Handler) DeleteRoom(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request",
+		})
+		return
+	}
+
+	room, err := models.FindRoomById(handler.DB, uint(id))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get room",
+		})
+		return
+	}
+
+	if err = room.Delete(handler.DB); err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to delete room",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Room deleted successfully",
 	})
 }

@@ -60,7 +60,7 @@ func FindAllUsers(db *gorm.DB) ([]User, error) {
 
 func FindUserById(db *gorm.DB, id uint) (User, error) {
 	var user User
-	result := db.Where("id = ?", id).First(&user)
+	result := db.First(&user, id)
 
 	return user, result.Error
 }
