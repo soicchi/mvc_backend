@@ -38,6 +38,12 @@ func (room *Room) Create(db *gorm.DB) (Room, error) {
 	return newRoom, result.Error
 }
 
+func (room *Room) Delete(db *gorm.DB) error {
+	result := db.Delete(&room)
+
+	return result.Error
+}
+
 func (room *Room) Validate() error {
 	return validation.ValidateStruct(room,
 		validation.Field(&room.Name,

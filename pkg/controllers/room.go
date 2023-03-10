@@ -101,3 +101,40 @@ func (handler *Handler) CreateRoom(ctx *gin.Context) {
 		"message": "Room created successfully",
 	})
 }
+
+func (handler *Handler) DeleteRoom(ctx *gin.Context) {
+	logger, err := utils.SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request",
+		})
+		return
+	}
+
+	room, err := models.FindRoomById(handler.DB, uint(id))
+	if err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get room",
+		})
+		return
+	}
+
+	if err = room.Delete(handler.DB); err != nil {
+		logger.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to delete room",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Room deleted successfully",
+	})
+}
