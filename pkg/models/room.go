@@ -22,6 +22,13 @@ func FindAllRooms(db *gorm.DB) ([]Room, error) {
 	return rooms, result.Error
 }
 
+func FindRoomById(db *gorm.DB, id uint) (Room, error) {
+	var room Room
+	result := db.First(&room, id)
+
+	return room, result.Error
+}
+
 func (room *Room) Create(db *gorm.DB) (Room, error) {
 	newRoom := Room{
 		Name: room.Name,
